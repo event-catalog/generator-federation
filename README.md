@@ -44,10 +44,14 @@ generators: [
       {
         // The git repo to clone
         source: 'https://github.com/event-catalog/eventcatalog.git',
+
+        // The branch to clone, defaults to main
+        branch: 'main',
+
         // The content to clone, this can be a single file or an array of files
         content: ['/domains'],
+
         // The destination to clone the content to
-        // in this example domains from the git repo will be merged into the catalog
         destination: path.join(catalogDir, 'domains'),
       },
     ],
