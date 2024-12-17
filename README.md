@@ -61,7 +61,7 @@ generators: [
 
 In this example we are cloning "domains" from the git repo and merging them into the catalog.
 
-When merging many repoistories you can use the `override` option to override files in the catalog.
+When merging many repositories you can use the `override` option to override files in the catalog.
 You can also use the `enforceUniqueResources` option to ensure all resources in the catalog are unique (to help with naming conflicts).
 
 # Getting started
