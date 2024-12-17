@@ -10,12 +10,17 @@ import os from 'node:os';
 // The event.catalog.js values for your plugin
 type EventCatalogConfig = any;
 
+// Configuration for copying files
+type CopyProps = {
+  content: string | string[];
+  destination: string;
+};
+
 // Configuration the users give your catalog
 type GeneratorProps = {
   source: string;
   branch?: string;
-  content: string | string[];
-  destination: string;
+  copy: CopyProps[];
   debug?: boolean;
   override?: boolean;
   enforceUniqueResources?: boolean;
@@ -33,7 +38,7 @@ const getFrontmatter = async (filename: string) => {
 
 async function checkForExistingPaths(contents: string | string[], destination: string, enforceUniqueResources: boolean) {
   // @ts-ignore
-  const { getService, getServices, getEvent, getDomain, getCommand, getQuery, getFlow } = utils(process.env.PROJECT_DIR);
+  const { getService, getEvent, getDomain, getCommand, getQuery, getFlow } = utils(process.env.PROJECT_DIR);
 
   const resourceFunctions = {
     services: getService,
@@ -118,34 +123,35 @@ export default async (_: EventCatalogConfig, options: GeneratorProps) => {
 
   // Sparse checkout the content
   await execSync(`git sparse-checkout init`, { cwd: tmpDir });
-  if (Array.isArray(options.content)) {
-    await execSync(`git sparse-checkout set ${options.content.join(' ')} --no-cone`, { cwd: tmpDir });
-  } else {
-    await execSync(`git sparse-checkout set ${options.content} --no-cone`, { cwd: tmpDir });
-  }
+
+  // Collect all content paths for sparse checkout
+  const allContentPaths = options.copy.flatMap(({ content }) => (Array.isArray(content) ? content : [content]));
+  await execSync(`git sparse-checkout set ${allContentPaths.join(' ')} --no-cone`, { cwd: tmpDir });
 
   // Checkout the branch
   await execSync(`git checkout ${options.branch || 'main'}`, { cwd: tmpDir });
 
-  // Check for existing paths first
-  if (!options.override) {
-    try {
-      await checkForExistingPaths(options.content, options.destination, options.enforceUniqueResources || false);
-    } catch (error) {
-      throw error; // Or handle it as you prefer
+  // Check for existing paths first and copy for each configuration
+  for (const copyConfig of options.copy) {
+    if (!options.override) {
+      try {
+        await checkForExistingPaths(copyConfig.content, copyConfig.destination, options.enforceUniqueResources || false);
+      } catch (error) {
+        throw error;
+      }
     }
-  }
 
-  // Take the content and copy it to the destination using fs-extra
-  if (Array.isArray(options.content)) {
-    for (const content of options.content) {
-      await fsExtra.copy(join(tmpDir, content), options.destination);
+    // Copy files for each configuration
+    if (Array.isArray(copyConfig.content)) {
+      for (const content of copyConfig.content) {
+        await fsExtra.copy(join(tmpDir, content), copyConfig.destination);
+      }
+    } else {
+      await fsExtra.copy(join(tmpDir, copyConfig.content), copyConfig.destination);
     }
-  } else {
-    await fsExtra.copy(join(tmpDir, options.content), options.destination);
-  }
 
-  console.log(chalk.cyan(` - Files successfully copied to ${options.destination}`));
+    console.log(chalk.cyan(` - Files successfully copied to ${copyConfig.destination}`));
+  }
 
   // Remove the tmpDir
   await fs.rm(tmpDir, { recursive: true });

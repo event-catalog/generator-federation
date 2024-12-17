@@ -30,20 +30,27 @@ describe('generator-federation', () => {
   it('clones the source directory and copies the files specified in the content to the destination directory', async () => {
     await plugin(eventCatalogConfig, {
       source: 'https://github.com/event-catalog/eventcatalog.git',
-      content: 'examples/default/domains/Orders/services',
-      destination: path.join(catalogDir, 'services'),
+      copy: [
+        {
+          content: 'examples/default/domains/Orders/services',
+          destination: path.join(catalogDir, 'services'),
+        },
+      ],
     });
 
     const services = await fs.readdir(path.join(catalogDir, 'services'));
     expect(services).toHaveLength(3);
   });
 
-  // content is an array of strings
   it('clones the source directory and copies the files specified in the content array to the destination directory', async () => {
     await plugin(eventCatalogConfig, {
       source: 'https://github.com/event-catalog/eventcatalog.git',
-      content: ['examples/default/domains/Orders/services', 'examples/default/domains/Payment/services'],
-      destination: path.join(catalogDir, 'services'),
+      copy: [
+        {
+          content: ['examples/default/domains/Orders/services', 'examples/default/domains/Payment/services'],
+          destination: path.join(catalogDir, 'services'),
+        },
+      ],
     });
 
     const services = await fs.readdir(path.join(catalogDir, 'services'));
@@ -54,8 +61,12 @@ describe('generator-federation', () => {
     it('clones the source directory (with the given branch) and copies the files specified in the content array to the destination directory', async () => {
       await plugin(eventCatalogConfig, {
         source: 'https://github.com/event-catalog/eventcatalog.git',
-        content: ['examples/basic/services'],
-        destination: path.join(catalogDir, 'services'),
+        copy: [
+          {
+            content: ['examples/basic/services'],
+            destination: path.join(catalogDir, 'services'),
+          },
+        ],
         branch: 'v1',
       });
 
@@ -68,14 +79,22 @@ describe('generator-federation', () => {
     it('overrides the content if the destination directory already exists and override is true', async () => {
       await plugin(eventCatalogConfig, {
         source: 'https://github.com/event-catalog/eventcatalog.git',
-        content: ['examples/default/domains/Orders/services'],
-        destination: path.join(catalogDir, 'services'),
+        copy: [
+          {
+            content: ['examples/default/domains/Orders/services'],
+            destination: path.join(catalogDir, 'services'),
+          },
+        ],
       });
 
       await plugin(eventCatalogConfig, {
         source: 'https://github.com/event-catalog/eventcatalog.git',
-        content: ['examples/default/domains/Orders/services'],
-        destination: path.join(catalogDir, 'services'),
+        copy: [
+          {
+            content: ['examples/default/domains/Orders/services'],
+            destination: path.join(catalogDir, 'services'),
+          },
+        ],
         override: true,
       });
 
@@ -84,7 +103,6 @@ describe('generator-federation', () => {
     });
 
     it('overides the content if the destination directory already exists and override is true', async () => {
-      // Write a file to the services directory
       const { writeService } = utils(catalogDir);
       await writeService({
         id: 'InventoryService',
@@ -94,11 +112,14 @@ describe('generator-federation', () => {
         markdown: 'Hello world',
       });
 
-      // This should throw an error
       await plugin(eventCatalogConfig, {
         source: 'https://github.com/event-catalog/eventcatalog.git',
-        content: ['examples/default/domains/Orders/services', 'examples/default/domains/Payment/services'],
-        destination: path.join(catalogDir, 'services'),
+        copy: [
+          {
+            content: ['examples/default/domains/Orders/services', 'examples/default/domains/Payment/services'],
+            destination: path.join(catalogDir, 'services'),
+          },
+        ],
         override: true,
       });
 
@@ -111,22 +132,28 @@ describe('generator-federation', () => {
     it('throws an error if the content trying to copy is already in the destination directory', async () => {
       await plugin(eventCatalogConfig, {
         source: 'https://github.com/event-catalog/eventcatalog.git',
-        content: ['examples/default/domains/Orders/services'],
-        destination: path.join(catalogDir, 'services'),
+        copy: [
+          {
+            content: ['examples/default/domains/Orders/services'],
+            destination: path.join(catalogDir, 'services'),
+          },
+        ],
       });
 
-      // expect this to throw an error with message "Path already exists at"
       await expect(
         plugin(eventCatalogConfig, {
           source: 'https://github.com/event-catalog/eventcatalog.git',
-          content: ['examples/default/domains/Orders/services'],
-          destination: path.join(catalogDir, 'services'),
+          copy: [
+            {
+              content: ['examples/default/domains/Orders/services'],
+              destination: path.join(catalogDir, 'services'),
+            },
+          ],
         })
       ).rejects.toThrow(/Path already exists at/);
     });
 
     it('throws an error if any of the resources in the content are found in the destination directory', async () => {
-      // Write a file to the services directory
       const { writeService } = utils(catalogDir);
       await writeService({
         id: 'InventoryService',
@@ -136,12 +163,15 @@ describe('generator-federation', () => {
         markdown: 'Hello world',
       });
 
-      // This should throw an error as the service is already there and override is false
       await expect(
         plugin(eventCatalogConfig, {
           source: 'https://github.com/event-catalog/eventcatalog.git',
-          content: ['examples/default/domains/Orders/services', 'examples/default/domains/Payment/services'],
-          destination: path.join(catalogDir, 'services'),
+          copy: [
+            {
+              content: ['examples/default/domains/Orders/services', 'examples/default/domains/Payment/services'],
+              destination: path.join(catalogDir, 'services'),
+            },
+          ],
         })
       ).rejects.toThrow(/Path already exists at/);
     });
@@ -149,7 +179,6 @@ describe('generator-federation', () => {
 
   describe('deep check', () => {
     it('if deep check is true then each resource will be checked if it already exists in EventCatalog using its id', async () => {
-      // Write a file to the services directory
       const { writeService } = utils(catalogDir);
       await writeService(
         {
@@ -164,12 +193,15 @@ describe('generator-federation', () => {
         }
       );
 
-      // This should throw an error as the service is already there
       await expect(
         plugin(eventCatalogConfig, {
           source: 'https://github.com/event-catalog/eventcatalog.git',
-          content: ['examples/default/domains/Orders/services'],
-          destination: path.join(catalogDir, 'services'),
+          copy: [
+            {
+              content: ['examples/default/domains/Orders/services'],
+              destination: path.join(catalogDir, 'services'),
+            },
+          ],
           enforceUniqueResources: true,
         })
       ).rejects.toThrow(/EventCatalog already has services with the id InventoryService/);
