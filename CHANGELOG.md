@@ -1,5 +1,11 @@
 # @eventcatalog/generator-federation
 
+## 0.0.3
+
+### Patch Changes
+
+- cbcb59c: chore(plugin): refactored api for the generator
+
 ## 0.0.2
 
 ### Patch Changes
