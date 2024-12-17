@@ -13,6 +13,7 @@ type EventCatalogConfig = any;
 // Configuration the users give your catalog
 type GeneratorProps = {
   source: string;
+  branch?: string;
   content: string | string[];
   destination: string;
   debug?: boolean;
@@ -123,8 +124,8 @@ export default async (_: EventCatalogConfig, options: GeneratorProps) => {
     await execSync(`git sparse-checkout set ${options.content} --no-cone`, { cwd: tmpDir });
   }
 
-  // Checkout the main branch
-  await execSync(`git checkout main`, { cwd: tmpDir });
+  // Checkout the branch
+  await execSync(`git checkout ${options.branch || 'main'}`, { cwd: tmpDir });
 
   // Check for existing paths first
   if (!options.override) {

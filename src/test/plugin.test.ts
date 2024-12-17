@@ -50,6 +50,20 @@ describe('generator-federation', () => {
     expect(services).toHaveLength(4);
   });
 
+  describe('branch', () => {
+    it('clones the source directory (with the given branch) and copies the files specified in the content array to the destination directory', async () => {
+      await plugin(eventCatalogConfig, {
+        source: 'https://github.com/event-catalog/eventcatalog.git',
+        content: ['examples/basic/services'],
+        destination: path.join(catalogDir, 'services'),
+        branch: 'v1',
+      });
+
+      const services = await fs.readdir(path.join(catalogDir, 'services'));
+      expect(services).toHaveLength(2);
+    });
+  });
+
   describe('override', () => {
     it('overrides the content if the destination directory already exists and override is true', async () => {
       await plugin(eventCatalogConfig, {
