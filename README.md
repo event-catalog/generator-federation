@@ -23,7 +23,7 @@
 - 🧑🏻‍💻 Let your teams control their own catalogs, and merge them into a master catalog
 - ⚡️ Git based generator, supports any git repo (e.g GitHub, GitLab, Bitbucket)
 - Specify the git repo, it's branch and the files you want to merge into your master catalog
-- ✅ Configuration to override files and ensure all files in the catalog are unique 
+- ✅ Configuration to override files and ensure all files in the catalog are unique
 
 # How it works
 
@@ -32,7 +32,7 @@
 EventCatalog supports [generators](https://www.eventcatalog.dev/docs/development/plugins/generators).
 Generators are scripts are run to pre build to generate content in your catalog. Generators can use the [EventCatalog SDK](https://www.eventcatalog.dev/docs/sdk).
 
-With this git generator you can connect to many git repos, and merge them into a master catalog. 
+With this git generator you can connect to many git repos, and merge them into a master catalog.
 
 This let's your teams control their own catalogs, and merge them into a master catalog, keeping the documentation close to the their code.
 
