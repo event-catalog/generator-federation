@@ -40,7 +40,7 @@ This let's your teams control their own catalogs, and merge them into a master c
 ...
 generators: [
     [
-      '@eventcatalogtest/generator-git',
+      '@eventcatalogtest/generator-federation',
       {
         // The git repo to clone
         source: 'https://github.com/event-catalog/eventcatalog.git',
@@ -69,7 +69,7 @@ _Make sure you are on the latest version of EventCatalog_.
 1. Install the package
 
 ```sh
-@eventcatalog/generator-git
+@eventcatalog/generator-federation
 ```
 
 2. Configure your `eventcatalog.config.js` file [(see example)](https://github.com/event-catalog/eventcatalog-openapi-example/blob/main/eventcatalog.config.js)

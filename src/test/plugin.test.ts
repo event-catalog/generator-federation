@@ -11,7 +11,7 @@ const eventCatalogConfig = {
 
 let catalogDir: string;
 
-describe('generator-git', () => {
+describe('generator-federation', () => {
   beforeEach(async () => {
     catalogDir = join(__dirname, 'catalog') || '';
     process.env.PROJECT_DIR = catalogDir;

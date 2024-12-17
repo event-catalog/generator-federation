@@ -9,7 +9,7 @@ jobs:
       contents: write
       pull-requests: write
     runs-on: ubuntu-latest
-    if: github.repository == 'event-catalog/generator-git'
+    if: github.repository == 'event-catalog/generator-federation'
     steps:
       - uses: actions/checkout@v4
         with:
