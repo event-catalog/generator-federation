@@ -1,0 +1,8 @@
+dist/
+node_modules/
+todo.js
+
+
+examples/**/catalog/*
+src/test/catalog/*
+src/test/tmp/*
