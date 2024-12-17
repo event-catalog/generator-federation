@@ -48,18 +48,36 @@ generators: [
         // The branch to clone, defaults to main
         branch: 'main',
 
-        // The content to clone, this can be a single file or an array of files
-        content: ['/domains'],
+        // Array of copy configurations - specify what content to copy and where to put it
+        copy: [
+          {
+            // The content to clone, this can be a single file or an array of files
+            content: ['/domains'],
+            // The destination to clone the content to
+            destination: path.join(catalogDir, 'domains'),
+          },
+          {
+            // You can have multiple copy configurations
+            content: '/services',
+            destination: path.join(catalogDir, 'services'),
+          }
+        ],
 
-        // The destination to clone the content to
-        destination: path.join(catalogDir, 'domains'),
+        // Optional: Override existing files (default: false)
+        override: false,
+
+        // Optional: Ensure all resources have unique IDs (default: false)
+        enforceUniqueResources: false,
       },
     ],
   ],
 ...
 ```
 
-In this example we are cloning "domains" from the git repo and merging them into the catalog.
+In this example we are:
+
+1. Cloning "domains" from the git repo and merging them into the catalog's domains directory
+2. Cloning "services" and merging them into the catalog's services directory
 
 When merging many repositories you can use the `override` option to override files in the catalog.
 You can also use the `enforceUniqueResources` option to ensure all resources in the catalog are unique (to help with naming conflicts).
