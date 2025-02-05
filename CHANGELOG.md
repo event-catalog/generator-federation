@@ -1,5 +1,11 @@
 # @eventcatalog/generator-federation
 
+## 0.0.4
+
+### Patch Changes
+
+- b9c50ce: chore(plugin): added checks for license
+
 ## 0.0.3
 
 ### Patch Changes

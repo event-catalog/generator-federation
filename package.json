@@ -1,6 +1,6 @@
 {
   "name": "@eventcatalog/generator-federation",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Merge multiple catalogs into one master catalog powered by git",
   "scripts": {
     "build": "tsup",
