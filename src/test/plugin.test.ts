@@ -1,4 +1,4 @@
-import { expect, it, describe, beforeEach, afterEach } from 'vitest';
+import { expect, it, describe, beforeEach, afterEach, vi } from 'vitest';
 import utils from '@eventcatalog/sdk';
 import plugin from '../index';
 import path, { join } from 'node:path';
@@ -10,6 +10,11 @@ const eventCatalogConfig = {
 };
 
 let catalogDir: string;
+
+// Add mock for the local checkLicense module
+vi.mock('../utils/checkLicense', () => ({
+  default: () => Promise.resolve(),
+}));
 
 describe('generator-federation', () => {
   beforeEach(async () => {

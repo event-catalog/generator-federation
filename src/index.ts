@@ -18,6 +18,7 @@ type CopyProps = {
 
 // Configuration the users give your catalog
 type GeneratorProps = {
+  licenseKey?: string;
   source: string;
   branch?: string;
   copy: CopyProps[];
@@ -110,6 +111,8 @@ export default async (_: EventCatalogConfig, options: GeneratorProps) => {
     throw new Error('Please provide catalog url (env variable PROJECT_DIR)');
   }
 
+  await checkLicense(options.licenseKey);
+
   // Remove the tmpDir if it exists
   if (fsExtra.existsSync(tmpDir)) {
     await fsExtra.remove(tmpDir);
@@ -155,6 +158,4 @@ export default async (_: EventCatalogConfig, options: GeneratorProps) => {
 
   // Remove the tmpDir
   await fs.rm(tmpDir, { recursive: true });
-
-  await checkLicense();
 };
